@@ -12,3 +12,4 @@ This project uses Watson NLP to detect emotions from a given text and exposes th
 - Unit testing
 - Error handling
 - Static code analysis with pylint
+# emotion-detector-project
