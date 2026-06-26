@@ -1,28 +1,49 @@
-''' Executing this function initiates the application of sentiment
-    analysis to be executed over the Flask channel and deployed on
-    localhost:5000.
-'''
-# Import Flask, render_template, request from the flask pramework package : TODO
-# Import the sentiment_analyzer function from the package created: TODO
+"""
+Flask server for the Emotion Detection web application.
+"""
 
-#Initiate the flask app : TODO
+from flask import Flask, render_template, request
 
-@app.route("/sentimentAnalyzer")
-def sent_analyzer():
-    ''' This code receives the text from the HTML interface and 
-        runs sentiment analysis over it using sentiment_analysis()
-        function. The output returned shows the label and its confidence 
-        score for the provided text.
-    '''
-    # TODO
+from EmotionDetection.emotion_detection import emotion_detector
+
+
+app = Flask(__name__)
+
 
 @app.route("/")
-def render_index_page():
-    ''' This function initiates the rendering of the main application
-        page over the Flask channel
-    '''
-    #TODO
+def index():
+    """
+    Render the main application page.
+    """
+    return render_template("index.html")
+
+
+@app.route("/emotionDetector")
+def detect_emotion():
+    """
+    Detect emotions from the text provided in the request.
+    """
+    text_to_analyze = request.args.get("textToAnalyze")
+
+    response = emotion_detector(text_to_analyze)
+
+    anger = response["anger"]
+    disgust = response["disgust"]
+    fear = response["fear"]
+    joy = response["joy"]
+    sadness = response["sadness"]
+    dominant_emotion = response["dominant_emotion"]
+
+    return (
+        "For the given statement, the system response is "
+        f"'anger': {anger}, "
+        f"'disgust': {disgust}, "
+        f"'fear': {fear}, "
+        f"'joy': {joy} and "
+        f"'sadness': {sadness}. "
+        f"The dominant emotion is {dominant_emotion}."
+    )
+
 
 if __name__ == "__main__":
-    ''' This functions executes the flask app and deploys it on localhost:5000
-    '''#TODO
+    app.run(host="0.0.0.0", port=5000)
